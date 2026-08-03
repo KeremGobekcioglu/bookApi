@@ -1,4 +1,4 @@
-package com.firstRestApi.demo.mappers.AuthorMapperImpl;
+package com.firstRestApi.demo.mappers.impl;
 
 import com.firstRestApi.demo.domain.dto.AuthorDto;
 import com.firstRestApi.demo.domain.entities.AuthorEntity;

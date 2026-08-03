@@ -1,5 +1,8 @@
 package com.firstRestApi.demo.mappers;
 
+import com.firstRestApi.demo.domain.dto.BookDto;
+import com.firstRestApi.demo.domain.entities.BookEntity;
+
 public interface Mapper<Entity,Dto> {
 
     // Converts an object of type A to type B
