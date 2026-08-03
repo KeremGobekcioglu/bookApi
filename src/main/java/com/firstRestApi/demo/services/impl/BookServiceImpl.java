@@ -5,6 +5,9 @@ import com.firstRestApi.demo.repositories.BookRepository;
 import com.firstRestApi.demo.services.BookService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.StreamSupport;
+
 @Service
 public class BookServiceImpl implements BookService {
 
@@ -18,5 +21,22 @@ public class BookServiceImpl implements BookService {
     public BookEntity createBook(String isbn, BookEntity book) {
         book.setIsbn(isbn);
         return bookRepository.save(book);
+    }
+
+    @Override
+    public List<BookEntity> findAll() {
+        /*
+         * CrudRepository.findAll() returns an Iterable, not a List.
+         *
+         * StreamSupport creates a Stream from sources that don't already provide one
+         * (such as Iterable).
+         *
+         * spliterator() returns a Spliterator, which is an object used to traverse
+         * and optionally split the elements for parallel processing.
+         *
+         * The second argument (false) means "use a sequential stream"
+         * (true would create a parallel stream).
+         */
+        return StreamSupport.stream(bookRepository.findAll().spliterator(),false).toList();
     }
 }

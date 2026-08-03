@@ -4,6 +4,7 @@ import com.firstRestApi.demo.TestDataUtil;
 import com.firstRestApi.demo.domain.dto.BookDto;
 import com.firstRestApi.demo.domain.entities.AuthorEntity;
 import com.firstRestApi.demo.domain.entities.BookEntity;
+import com.firstRestApi.demo.services.BookService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +26,13 @@ public class BookControllerIntegrationTests {
 
     private MockMvc mockMvc;
     private ObjectMapper objectMapper;
+    @Autowired
+    private BookService bookService;
 
     @Autowired
-    public BookControllerIntegrationTests(MockMvc mockMvc) {
+    public BookControllerIntegrationTests(MockMvc mockMvc, BookService bookService) {
         this.mockMvc = mockMvc;
+        this.bookService = bookService;
         this.objectMapper = new ObjectMapper();
     }
 
@@ -58,6 +62,28 @@ public class BookControllerIntegrationTests {
                 MockMvcResultMatchers.jsonPath("$.isbn").value(bookDto.getIsbn())
         ).andExpect(
                 MockMvcResultMatchers.jsonPath("$.title").value(bookDto.getTitle())
+        );
+    }
+
+    @Test
+    public void testThatGetBooksReturn200() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        );
+    }
+
+    @Test
+    public void testThatGetAuthorsReturnListofBooks() throws Exception {
+        BookEntity book = TestDataUtil.createTestBookEntityA(null);
+        bookService.createBook(book.getIsbn(),book);
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/books")
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$[0].isbn").value(book.getIsbn())
         );
     }
 }
