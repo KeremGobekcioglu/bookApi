@@ -81,6 +81,9 @@ public class AuthorControllerIntegrationTests {
     @Test
     public void testThatGetAuthorsReturnListofAuthors() throws Exception {
         AuthorEntity author = TestDataUtil.createTestAuthorEntityA();
+        // id must be nulled: TestDataUtil hardcodes id=1, which makes save() merge()
+        // an update against a nonexistent row instead of persist()-ing a new one,
+        // throwing ObjectOptimisticLockingFailureException ("row already updated/deleted").
         author.setId(null);
         authorService.createAuthor(author);
         mockMvc.perform(
