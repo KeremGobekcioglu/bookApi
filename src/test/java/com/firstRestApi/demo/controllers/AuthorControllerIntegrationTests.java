@@ -97,4 +97,50 @@ public class AuthorControllerIntegrationTests {
                 MockMvcResultMatchers.jsonPath("$[0].age").value("80")
         );
     }
+
+    @Test
+    public void testThatGetAuthorsReturn200WhenAuthorExists() throws Exception {
+        AuthorEntity author = TestDataUtil.createTestAuthorEntityA();
+        // id must be nulled: TestDataUtil hardcodes id=1, which makes save() merge()
+        // an update against a nonexistent row instead of persist()-ing a new one,
+        // throwing ObjectOptimisticLockingFailureException ("row already updated/deleted").
+        author.setId(null);
+        authorService.createAuthor(author);
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/authors/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.status().isOk()
+        );
+    }
+
+    @Test
+    public void testThatGetAuthorsReturn404WhenNoAuthorExists() throws Exception {
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/authors/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.status().isNotFound()
+        );
+    }
+
+    @Test
+    public void testThatGetAuthorsReturnAuthorWhenAuthorExists() throws Exception {
+        AuthorEntity author = TestDataUtil.createTestAuthorEntityA();
+        // id must be nulled: TestDataUtil hardcodes id=1, which makes save() merge()
+        // an update against a nonexistent row instead of persist()-ing a new one,
+        // throwing ObjectOptimisticLockingFailureException ("row already updated/deleted").
+        author.setId(null);
+        authorService.createAuthor(author);
+        mockMvc.perform(
+                MockMvcRequestBuilders.get("/authors/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.id").value(1)
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.name").value("Abigail Rose")
+        ).andExpect(
+                MockMvcResultMatchers.jsonPath("$.age").value(80)
+        );
+    }
 }

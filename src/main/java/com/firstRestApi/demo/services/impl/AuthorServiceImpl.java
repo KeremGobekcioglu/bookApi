@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -31,5 +32,10 @@ public class AuthorServiceImpl implements AuthorService {
         //return list;
         return StreamSupport.stream(iterableAuthors.spliterator(),false)
                 .toList();
+    }
+
+    @Override
+    public Optional<AuthorEntity> findOne(Long id) {
+        return authorRepository.findById(id);
     }
 }
