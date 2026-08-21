@@ -99,7 +99,7 @@ public class AuthorControllerIntegrationTests {
     }
 
     @Test
-    public void testThatGetAuthorsReturn200WhenAuthorExists() throws Exception {
+    public void testThatGetAuthorReturn200WhenAuthorExists() throws Exception {
         AuthorEntity author = TestDataUtil.createTestAuthorEntityA();
         // id must be nulled: TestDataUtil hardcodes id=1, which makes save() merge()
         // an update against a nonexistent row instead of persist()-ing a new one,
@@ -115,7 +115,7 @@ public class AuthorControllerIntegrationTests {
     }
 
     @Test
-    public void testThatGetAuthorsReturn404WhenNoAuthorExists() throws Exception {
+    public void testThatGetAuthorReturn404WhenNoAuthorExists() throws Exception {
         mockMvc.perform(
                 MockMvcRequestBuilders.get("/authors/1")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -125,7 +125,7 @@ public class AuthorControllerIntegrationTests {
     }
 
     @Test
-    public void testThatGetAuthorsReturnAuthorWhenAuthorExists() throws Exception {
+    public void testThatGetAuthorReturnAuthorWhenAuthorExists() throws Exception {
         AuthorEntity author = TestDataUtil.createTestAuthorEntityA();
         // id must be nulled: TestDataUtil hardcodes id=1, which makes save() merge()
         // an update against a nonexistent row instead of persist()-ing a new one,
