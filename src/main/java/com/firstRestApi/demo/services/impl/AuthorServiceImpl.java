@@ -45,4 +45,20 @@ public class AuthorServiceImpl implements AuthorService {
     public boolean isExists(Long id) {
         return authorRepository.existsById(id);
     }
+
+    @Override
+    public AuthorEntity partialUpdate(Long id, AuthorEntity author) {
+        author.setId(id);
+        return authorRepository.findById(id)
+                .map(
+                        existingAuthor ->
+                        {
+                            Optional.ofNullable(author.getAge()).ifPresent(existingAuthor::setAge);
+                            Optional.ofNullable(author.getName()).ifPresent(existingAuthor::setName);
+                            return authorRepository.save(existingAuthor);
+                        }
+                ).orElseThrow(
+                        () -> new RuntimeException("Author Does Not exists")
+                );
+    }
 }
