@@ -1,5 +1,6 @@
 package com.firstRestApi.demo.services.impl;
 
+import com.firstRestApi.demo.domain.dto.AuthorDto;
 import com.firstRestApi.demo.domain.entities.AuthorEntity;
 import com.firstRestApi.demo.repositories.AuthorRepository;
 import com.firstRestApi.demo.services.AuthorService;
@@ -20,7 +21,8 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public AuthorEntity createAuthor(AuthorEntity author) {
+    public AuthorEntity saveAuthor(AuthorEntity author) {
+        // save() inserts if id is null, updates if id is set (see isExists check in controller)
         return authorRepository.save(author);
     }
 
@@ -37,5 +39,10 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public Optional<AuthorEntity> findOne(Long id) {
         return authorRepository.findById(id);
+    }
+
+    @Override
+    public boolean isExists(Long id) {
+        return authorRepository.existsById(id);
     }
 }
