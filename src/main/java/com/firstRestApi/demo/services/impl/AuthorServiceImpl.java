@@ -61,4 +61,12 @@ public class AuthorServiceImpl implements AuthorService {
                         () -> new RuntimeException("Author Does Not exists")
                 );
     }
+    @Override
+    public void delete(Long id)
+    {
+        if (authorRepository.existsById(id))
+        {
+            authorRepository.deleteById(id);
+        }
+    }
 }

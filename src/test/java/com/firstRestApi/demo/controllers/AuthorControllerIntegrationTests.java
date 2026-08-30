@@ -201,4 +201,28 @@ public class AuthorControllerIntegrationTests {
                 MockMvcResultMatchers.jsonPath("$.age").value(authorDto.getAge())
         );
     }
+
+    @Test
+    public void testThatDeleteAuthorReturns204ForNonExistingAuthor() throws Exception
+    {
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete("/authors/999")
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
+
+    @Test
+    public void testThatDeleteAuthorReturns204ForExistingAuthor() throws Exception
+    {
+        AuthorEntity author = TestDataUtil.createTestAuthorEntityA();
+        // id must be nulled: TestDataUtil hardcodes id=1, which makes save() merge()
+        // an update against a nonexistent row instead of persist()-ing a new one,
+        // throwing ObjectOptimisticLockingFailureException ("row already updated/deleted").
+        author.setId(null);
+        AuthorEntity savedAuthor = authorService.saveAuthor(author);
+        mockMvc.perform(
+                MockMvcRequestBuilders.delete("/authors/" + savedAuthor.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+        ).andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
 }
