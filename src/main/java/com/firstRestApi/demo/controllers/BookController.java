@@ -4,6 +4,8 @@ import com.firstRestApi.demo.domain.dto.BookDto;
 import com.firstRestApi.demo.domain.entities.BookEntity;
 import com.firstRestApi.demo.mappers.Mapper;
 import com.firstRestApi.demo.services.BookService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,12 +40,10 @@ public class BookController {
     }
 
     @GetMapping(path = "/books")
-    public List<BookDto> listBooks()
+    public Page<BookDto> listBooks(Pageable pageable)
     {
-        List<BookEntity> books = bookService.findAll();
-        return books.stream().map(
-                bookMapper::mapTo
-        ).toList();
+        Page<BookEntity> books = bookService.findAll(pageable);
+        return books.map(bookMapper::mapTo);
     }
 
     @GetMapping(path = "/books/{isbn}")

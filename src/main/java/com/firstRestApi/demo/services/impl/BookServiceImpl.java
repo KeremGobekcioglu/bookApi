@@ -3,6 +3,8 @@ package com.firstRestApi.demo.services.impl;
 import com.firstRestApi.demo.domain.entities.BookEntity;
 import com.firstRestApi.demo.repositories.BookRepository;
 import com.firstRestApi.demo.services.BookService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,6 +41,11 @@ public class BookServiceImpl implements BookService {
          * (true would create a parallel stream).
          */
         return StreamSupport.stream(bookRepository.findAll().spliterator(),false).toList();
+    }
+
+    @Override
+    public Page<BookEntity> findAll(Pageable pageable) {
+        return bookRepository.findAll(pageable);
     }
 
     @Override
